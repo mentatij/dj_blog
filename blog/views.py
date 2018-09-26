@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, View
 
 from .forms import PostForm, TagForm
 from .models import Post, Tag
-from .utils import ObjectCreateMixin, ObjectUpdateMixin, ObjectDeleteMixin
+from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, ObjectDeleteMixin
 
 
 class PostsListView(ListView):
@@ -15,7 +15,7 @@ class PostsListView(ListView):
         return Post.objects.all()
 
 
-class PostDetailView(DetailView):
+class PostDetailView(ObjectDetailMixin, View):
     model = Post
     template_name = 'blog/post_detail.html'
 
@@ -45,7 +45,7 @@ class TagsListView(ListView):
         return Tag.objects.all()
 
 
-class TagDetailView(DetailView):
+class TagDetailView(ObjectDetailMixin, View):
     model = Tag
     template_name = 'blog/tag_detail.html'
 

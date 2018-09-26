@@ -1,6 +1,21 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+
+class ObjectDetailMixin:
+    model = None
+    template_name = None
+
+    def get(self, request, slug):
+        obj = self.model.objects.get(slug__iexact=slug)
+        return render(request, self.template_name,
+                      {
+                          self.model.__name__.lower(): obj,
+                          'admin_object': obj,
+                          'detail': True,
+                      })
+
+
 class ObjectCreateMixin:
     model_form = None
     template_name = None
