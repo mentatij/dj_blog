@@ -1,5 +1,7 @@
-from django.views.generic import ListView, DetailView, View
+from django.db.models import Q
+from django.views.generic import ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 
 from .forms import PostForm, TagForm
 from .models import Post, Tag
@@ -8,10 +10,20 @@ from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, Obje
 
 class PostsListView(ListView):
     template_name = 'blog/posts_list.html'
-    context_object_name = 'posts'
+    context_object_name = 'page_object'
 
     def get_queryset(self):
-        return Post.objects.all()
+        search_query = self.request.GET.get('search', '')
+
+        if search_query:
+            posts = Post.objects.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+        else:
+            posts = Post.objects.all()
+
+        page_number = self.request.GET.get('page', 1)
+        paginator = Paginator(posts, 3)
+        page = paginator.get_page(page_number)
+        return page
 
 
 class PostDetailView(ObjectDetailMixin, View):
