@@ -20,7 +20,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="/">Index</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -53,10 +53,12 @@
         </div>
     </div>
 </div>
-<div class="admin-panel align-items-center">
-    <a href="/admin" class="btn btn-outline-info">Admin Side</a>
-    {% block admin-panel %}
-    {% endblock %}
-</div>
+{% if request.user.is_authenticated and request.user.is_staff %}
+    <div class="admin-panel align-items-center">
+        <a href="/admin" class="btn btn-outline-info">Admin Side</a>
+        {% block admin-panel %}
+        {% endblock %}
+    </div>
+{% endif %}
 </body>
 </html>
