@@ -12,6 +12,12 @@ class PostsListView(ListView):
     template_name = 'blog/posts_list.html'
     context_object_name = 'page_object'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_query = self.request.GET.get('search', '')
+        context['search_query'] = search_query
+        return context
+
     def get_queryset(self):
         search_query = self.request.GET.get('search', '')
 
@@ -23,6 +29,7 @@ class PostsListView(ListView):
         page_number = self.request.GET.get('page', 1)
         paginator = Paginator(posts, 3)
         page = paginator.get_page(page_number)
+
         return page
 
 
